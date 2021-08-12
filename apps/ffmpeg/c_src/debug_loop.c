@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <sys/resource.h>
+
 
 extern int in_fd;
 extern int out_fd;
