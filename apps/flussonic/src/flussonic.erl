@@ -113,6 +113,7 @@ start0(_Options) ->
 
 
   lager:start(),
+application:ensure_all_started(lager),
   lager:notice("Flussonic version ~s is booting", [flu:version()]),
 
   case LogDir of
@@ -130,6 +131,7 @@ start0(_Options) ->
   application:start(crypto),
   application:start(public_key),
   application:start(ssl),
+application:ensure_all_started(ssl),
   start_app(lhttpc),
 
   license_client:load(),
@@ -185,7 +187,7 @@ try_start_app(App) ->
 
 start_app(App) ->
   case application:start(App) of
-    ok -> load_app(App);
+    ok -> application:ensure_all_started(App), load_app(App);
     {error, {already_started, _}} -> load_app(App)
   end.
 

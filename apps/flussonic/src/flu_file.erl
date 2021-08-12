@@ -330,7 +330,7 @@ reader_loop(#reader{} = State) ->
       catch
         Class:Error ->
           lager:error("File worker error after message ~p with details: ~p:~p\n~p", [Message, Class, Error, erlang:get_stacktrace()]),
-          error({Class,Error,erlang:get_stacktrace()})
+          error({Class,Error,erlang:get_stacktrace()}) %???????
       end
     after
       60000 ->
@@ -399,7 +399,7 @@ reader_manifest(Reader, Manifest) ->
   receive
     {Manifest, Bin} -> {ok, Bin}
   after
-    1000 -> error({timeout,Manifest})
+    1000 -> error({timeout,Manifest}) %????????????
   end.
 
 
@@ -518,7 +518,8 @@ handle_call({hls_playlist, Tracks}, _From, #state{readers = [Pid|_], timeout = T
 
 handle_call(hls_playlist, _From, #state{hls_playlist = undefined, readers = Readers} = State) ->
   [Pid|_] = Readers,
-  {ok, HlsPlaylist} = reader_manifest(Pid, hls_playlist),
+%io:format("*** ~p~n", [Pid]),
+  {ok, HlsPlaylist} = reader_manifest(Pid, hls_playlist), %?????????????
   gen_tracker:setattr(flu_files, State#state.name, [{hls_playlist, HlsPlaylist}]),
   handle_call(hls_playlist, _From, State#state{hls_playlist = HlsPlaylist});
 
