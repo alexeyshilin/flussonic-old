@@ -31,7 +31,9 @@ case $1 in
   mkdir -p /var/run/flussonic
   export RUN_ERL_LOG_GENERATIONS=5
   export RUN_ERL_LOG_MAXSIZE=100000
-  run_erl -daemon /var/run/flussonic/ /var/log/flussonic/console "exec $0 launch"
+  #echo "[exec $0 launch]"
+  echo " /usr/local/share/libs/otp_16b03-1/bin/run_erl -daemon /var/run/flussonic/ /var/log/flussonic/console \"exec $0 launch\""
+  /usr/local/share/libs/otp_16b03-1/bin/run_erl -daemon /var/run/flussonic/ /var/log/flussonic/console "exec $0 launch"
   i=0
   while ((i < 100)) && [ ! -f "$PIDFILE" ] ; do 
     echo -n "."
@@ -44,7 +46,7 @@ case $1 in
   echo "Stopping flussonic"
   if [ -f $COOKIEFILE ] ; then
     COOKIE=`cat $COOKIEFILE`
-    echo `erl_call -a 'erlang halt' -n flussonic@127.0.0.1 -c "$COOKIE"`
+    echo `/usr/local/share/libs/otp_16b03-1/lib/erlang/lib/erl_interface-3.7.15/bin/erl_call -a 'erlang halt' -n flussonic@127.0.0.1 -c "$COOKIE"`
   fi
   PID=`cat $PIDFILE 2>/dev/null`
   [ "$PID" != "" ] && kill $PID >/dev/null 2>&1
@@ -75,7 +77,8 @@ case $1 in
   if [ "$ASYNC_THREADS" == "" ] ; then
     ASYNC_THREADS=100
   fi
-  CMD="erl +K true +A ${ASYNC_THREADS} +a 1024 ${SBT} -name flussonic@127.0.0.1 -setcookie $COOKIE -pa apps/*/ebin -pa deps/*/ebin -boot start_sasl -s flussonic -sasl errlog_type error"
+  CMD="/usr/local/share/libs/otp_16b03-1/bin/erl +K true +A ${ASYNC_THREADS} +a 1024 ${SBT} -name flussonic@127.0.0.1 -setcookie $COOKIE -pa apps/*/ebin -pa deps/*/ebin -boot start_sasl -s flussonic -sasl errlog_type error"
+  #echo "[$CMD]"
   exec $CMD
   ;;
 "reload")
@@ -96,7 +99,8 @@ case $1 in
 "attach")
   echo "Attaching"
   cd $FLUDIR
-  [ -f /usr/lib/erlang/bin/to_erl ] && TO_ERL=/usr/lib/erlang/bin/to_erl || TO_ERL=to_erl
+  #[ -f /usr/lib/erlang/bin/to_erl ] && TO_ERL=/usr/lib/erlang/bin/to_erl || TO_ERL=to_erl
+  [ -f /usr/local/share/libs/otp_16b03-1/bin/to_erl ] && TO_ERL=/usr/local/share/libs/otp_16b03-1/bin/to_erl || TO_ERL=/usr/local/share/libs/otp_16b03-1/bin/to_erl
   $TO_ERL /var/run/flussonic/
   ;;
 "shell")
