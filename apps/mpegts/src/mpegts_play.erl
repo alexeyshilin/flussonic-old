@@ -23,7 +23,7 @@
 %%%---------------------------------------------------------------------------------------
 -module(mpegts_play).
 -author('Max Lapshin <max@maxidoors.ru>').
--include("log.hrl").
+%! -include("log.hrl").
 
 -include_lib("erlmedia/include/video_frame.hrl").
 
@@ -77,7 +77,7 @@ play(#http_player{} = Player) ->
       end
   after
     ?TIMEOUT ->
-      ?D("MPEG TS player timeout, no frames received"),
+%!      ?D("MPEG TS player timeout, no frames received"),
       Player
   end.
   
@@ -87,7 +87,7 @@ handle_msg(#http_player{} = HTTPPlayer, #video_frame{} = Frame) ->
   send_frame(HTTPPlayer, Frame);
 
 handle_msg(#http_player{streamer = Streamer} = State, {'DOWN', _, process, Pid, _}) ->
-  ?D({"MPEG TS reader disconnected", Pid, Streamer}),
+%!  ?D({"MPEG TS reader disconnected", Pid, Streamer}),
   {stop, State};
 
 handle_msg(#http_player{} = State, {ems_stream, _,play_complete,_}) ->
@@ -100,7 +100,7 @@ handle_msg(Streamer, {ems_stream, _, _}) ->
   {ok, Streamer};
   
 handle_msg(#http_player{} = Streamer, Message) ->
-  ?D(Message),
+%!  ?D(Message),
   {ok, Streamer}.
 
 

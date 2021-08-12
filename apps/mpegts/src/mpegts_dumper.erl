@@ -97,7 +97,8 @@ dump_frames(File, Position, Reader, Count) ->
     Count rem 1000 == 0 andalso Count > 0 andalso Count =/= PrevIOCount -> 
       put(prev_io_count, Count),
       DeltaTime = timer:now_diff(erlang:now(), get(start_time)) div 1000,
-      ?D({Count, DeltaTime, Count / DeltaTime, Position div (DeltaTime*1000)});
+%      ?D({Count, DeltaTime, Count / DeltaTime, Position div (DeltaTime*1000)});
+ok;
     true -> ok
   end,
   case file:pread(File, Position, 188) of
